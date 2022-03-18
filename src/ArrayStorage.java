@@ -11,7 +11,7 @@ public class ArrayStorage {
             storage[i] = null;
         }
 
-        System.out.println("Массив для хранения резюме очищен. Количество очищенных элементов "+size);
+        System.out.println("Массив для хранения резюме очищен. Количество очищенных элементов " + size);
         size = 0;
     }
 
@@ -51,7 +51,7 @@ public class ArrayStorage {
 
             storage[size - 1] = null;
             size--;
-            System.out.println("Резюме удалено из массива для хранения. Индекс удаленного резюме "+indexForDelete);
+            System.out.println("Резюме удалено из массива для хранения. Индекс удаленного резюме " + indexForDelete);
         }
     }
 
@@ -60,7 +60,7 @@ public class ArrayStorage {
      */
     Resume[] getAll() {
         Resume[] newStorage = new Resume[size];
-        for (int i=0;i<size;i++){
+        for (int i = 0; i < size; i++) {
             newStorage[i] = storage[i];
         }
 
