@@ -43,6 +43,10 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
+        if (!resumeIsPresent(uuid)) {
+            System.out.println("ERROR: Resume is not exists. Impossible to update.");
+            return null;
+        }
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return storage[i];
@@ -71,11 +75,7 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        Resume[] newStorage = new Resume[size];
-        for (int i = 0; i < size; i++) {
-            newStorage[i] = storage[i];
-        }
-        return newStorage;
+        return new Resume[size];
     }
 
     public int size() {
@@ -83,8 +83,8 @@ public class ArrayStorage {
     }
 
     /**
-     * @param uuid check the resume by uuid in storage;
-     * @return boolean, if resume will be find by uuid then return true, else false
+     * @param uuid using for check resume in the storage;
+     * @return boolean, if resume will be find then return true, else false
      */
     private boolean resumeIsPresent(String uuid) {
         for (Resume r : storage) {
