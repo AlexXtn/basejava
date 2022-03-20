@@ -9,8 +9,8 @@ import java.util.Arrays;
  */
 public class ArrayStorage {
 
-    private final Resume[] storage = new Resume[10000];
-    private int size;
+    private Resume[] storage = new Resume[10000];
+    private int size = 0;
 
     public void clear() {
         for (int i = 0; i < size; i++) {
@@ -22,7 +22,7 @@ public class ArrayStorage {
 
     public void save(Resume r) {
         if (resumeIsPresent(r.getUuid())) {
-            System.out.println("ERROR: Resume already exists. Impossible to save.");
+            System.out.println("ERROR: Resume " + r.getUuid() + " already exists. Impossible to save.");
             return;
         }
         if (size == 10000) {
@@ -35,7 +35,7 @@ public class ArrayStorage {
 
     public void update(Resume r) {
         if (!resumeIsPresent(r.getUuid())) {
-            System.out.println("ERROR: Resume is not exists. Impossible to update.");
+            System.out.println("ERROR: Resume " + r.getUuid() + " is not exists. Impossible to update.");
             return;
         }
         Resume resume = get(r.getUuid());
@@ -44,7 +44,7 @@ public class ArrayStorage {
 
     public Resume get(String uuid) {
         if (!resumeIsPresent(uuid)) {
-            System.out.println("ERROR: Resume is not exists. Impossible to update.");
+            System.out.println("ERROR: Resume " + uuid + " is not exists.");
             return null;
         }
         for (int i = 0; i < size; i++) {
@@ -57,7 +57,7 @@ public class ArrayStorage {
 
     public void delete(String uuid) {
         if (!resumeIsPresent(uuid)) {
-            System.out.println("ERROR: Resume is not exists. Impossible to delete.");
+            System.out.println("ERROR: Resume " + uuid + " is not exists. Impossible to delete.");
             return;
         }
         for (int i = 0; i < size; i++) {
@@ -75,7 +75,11 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        return new Resume[size];
+        Resume[] newResume = new Resume[size];
+        for (int i = 0; i < size; i++) {
+            newResume[i] = storage[i];
+        }
+        return newResume;
     }
 
     public int size() {
@@ -87,8 +91,8 @@ public class ArrayStorage {
      * @return boolean, if resume will be find then return true, else false
      */
     private boolean resumeIsPresent(String uuid) {
-        for (Resume r : storage) {
-            if (r.getUuid().equals(uuid)) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals((uuid))) {
                 return true;
             }
         }
