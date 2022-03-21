@@ -7,25 +7,17 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public class ArrayStorage {
-
-    private Resume[] storage = new Resume[10000];
-    private int size = 0;
+public class ArrayStorage extends AbstractArrayStorage {
 
     public void clear() {
-        for (int i = 0; i < size; i++) {
-            storage[i] = null;
-        }
-        System.out.println("Массив для хранения резюме очищен. Количество очищенных элементов " + size);
+        Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     public void save(Resume r) {
-        if (resumeIsPresent(r.getUuid())) {
+        if (getIndex(r.getUuid()) != -1) {
             System.out.println("ERROR: Resume " + r.getUuid() + " already exists. Impossible to save.");
-            return;
-        }
-        if (size == 10000) {
+        } else if (size == STORAGE_LIMIT) {
             System.out.println("ERROR: Resumes for storage is overflow");
         } else {
             storage[size] = r;
@@ -34,40 +26,31 @@ public class ArrayStorage {
     }
 
     public void update(Resume r) {
-        if (!resumeIsPresent(r.getUuid())) {
+        int index = getIndex(r.getUuid());
+        if (getIndex(r.getUuid()) == -1) {
             System.out.println("ERROR: Resume " + r.getUuid() + " is not exists. Impossible to update.");
-            return;
         }
-        Resume resume = get(r.getUuid());
-        resume.setUuid(r.getUuid());
+        storage[index] = r;
     }
 
     public Resume get(String uuid) {
-        if (!resumeIsPresent(uuid)) {
+        int index = getIndex(uuid);
+        if (index == -1) {
             System.out.println("ERROR: Resume " + uuid + " is not exists.");
             return null;
         }
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return storage[i];
-            }
-        }
-        return null;
+        return storage[index];
     }
 
     public void delete(String uuid) {
-        if (!resumeIsPresent(uuid)) {
+        int index = getIndex(uuid);
+        if (index == -1) {
             System.out.println("ERROR: Resume " + uuid + " is not exists. Impossible to delete.");
-            return;
-        }
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                storage[i] = storage[size - 1];
-                storage[size - 1] = null;
-                size--;
-                System.out.println("Резюме удалено из массива для хранения. Индекс удаленного резюме " + i);
-                break;
-            }
+        } else {
+            storage[index] = storage[size - 1];
+            storage[size - 1] = null;
+            size--;
+            System.out.println("Резюме удалено из массива для хранения. Индекс удаленного резюме " + index);
         }
     }
 
@@ -75,28 +58,16 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        Resume[] newResume = new Resume[size];
-        for (int i = 0; i < size; i++) {
-            newResume[i] = storage[i];
-        }
-        return newResume;
+        return Arrays.copyOfRange(storage, 0, size);
     }
 
-    public int size() {
-        return size;
-    }
-
-    /**
-     * @param uuid using for check resume in the storage;
-     * @return boolean, if resume will be find then return true, else false
-     */
-    private boolean resumeIsPresent(String uuid) {
+    private int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals((uuid))) {
-                return true;
+            if (storage[i].getUuid().equals(uuid)) {
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
 }
